@@ -57,6 +57,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
-    return await tokenStorage.clear();
+    await tokenStorage.clear();
+    await localStorage.clear();
   }
 }

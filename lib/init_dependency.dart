@@ -33,7 +33,7 @@ Future<void> initDependencies() async {
   );
 
   serviceLocator.registerLazySingleton<DioClient>(
-    () => DioClient(serviceLocator()),
+    () => DioClient(serviceLocator(), serviceLocator()),
   );
 
   _initAuth();

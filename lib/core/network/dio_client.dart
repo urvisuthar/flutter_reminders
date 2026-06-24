@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_reminders/core/config/app_config.dart';
 import 'package:flutter_reminders/core/network/jwt_interceptor.dart';
+import 'package:flutter_reminders/core/storage/local_storage.dart';
 
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../init_dependency.dart';
@@ -9,7 +10,7 @@ import '../storage/token_storage.dart';
 class DioClient {
   final Dio dio;
 
-  DioClient(TokenStorage tokenStorage)
+  DioClient(TokenStorage tokenStorage, LocalStorage localStorage)
     : dio = Dio(
         BaseOptions(
           baseUrl: AppConfig.baseUrl,
@@ -23,7 +24,7 @@ class DioClient {
       ) {
     // 🔐 JWT Interceptor
     dio.interceptors.add(
-      JwtInterceptor(tokenStorage, () {
+      JwtInterceptor(tokenStorage, localStorage, () {
         serviceLocator<AuthBloc>().add(LogoutRequested());
       }),
     );

@@ -43,3 +43,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Environment config files
+env/prod.json
+env/uat.json
+env/sit.json
+!env/sit.example.json

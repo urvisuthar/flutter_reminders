@@ -2,15 +2,17 @@ import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_reminders/core/network/api_endpoints.dart';
+import 'package:flutter_reminders/core/storage/local_storage.dart';
 import 'package:flutter_reminders/core/storage/token_storage.dart';
 
 class JwtInterceptor extends Interceptor {
   final TokenStorage _tokenStorage;
+  final LocalStorage _localStorage;
   final VoidCallback? onUnauthorized;
 
   bool _isHandlingUnauthorized = false;
 
-  JwtInterceptor(this._tokenStorage, this.onUnauthorized);
+  JwtInterceptor(this._tokenStorage, this._localStorage, this.onUnauthorized);
 
   @override
   void onRequest(
@@ -36,6 +38,7 @@ class JwtInterceptor extends Interceptor {
       _isHandlingUnauthorized = true;
 
       await _tokenStorage.clear();
+      await _localStorage.clear();
 
       onUnauthorized?.call();
     }

@@ -62,9 +62,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
-    final result = await _logoutUseCase.call();
-    // Implement logout logic here, e.g., clear tokens, etc.
-    // After logout, emit the unauthenticated state
+    await _logoutUseCase.call();
     emit(AuthUnauthenticated());
   }
 }
