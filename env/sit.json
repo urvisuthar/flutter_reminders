@@ -1,0 +1,6 @@
+{
+  "ENV": "sit",
+  "BASE_URL": "https://phplaravel-1022765-6487328.cloudwaysapps.com/api",
+  "APP_NAME": "Reminders SIT",
+  "APP_ID": "com.daily.reminders.sit"
+}
