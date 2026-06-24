@@ -36,7 +36,7 @@ class JwtInterceptor extends Interceptor {
     if ((statusCode == 401 || statusCode == 403) &&
         !_isHandlingUnauthorized) {
       _isHandlingUnauthorized = true;
-
+      print('[Auth] Session expired (HTTP $statusCode) — auto logout at ${DateTime.now()}');
       await _tokenStorage.clear();
       await _localStorage.clear();
 

@@ -9,6 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/settings/settings_cubit.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/domain/usecases/login_usecase.dart';
 
@@ -35,6 +36,8 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton<DioClient>(
     () => DioClient(serviceLocator(), serviceLocator()),
   );
+
+  serviceLocator.registerLazySingleton(() => SettingsCubit(serviceLocator()));
 
   _initAuth();
 }

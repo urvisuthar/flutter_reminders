@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_reminders/core/utils/validators.dart';
@@ -23,29 +22,32 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
+  void _onLogin(BuildContext context) {
+    if (_formKey.currentState!.validate()) {
+      context.read<AuthBloc>().add(
+        LoginInRequested(
+          email: _emailController.text,
+          password: _passwordController.text,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login")),
+      appBar: AppBar(title: const Text("Login")),
       body: SingleChildScrollView(
         child: Container(
           alignment: Alignment.center,
-          child: BlocListener<AuthBloc, AuthState>(
+          child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
-              if (state is AuthLoading) {
-                CupertinoActivityIndicator();
-              }
               if (state is AuthFailure) {
                 AppSnackbar.showError(context, state.message);
               }
@@ -54,66 +56,67 @@ class _LoginPageState extends State<LoginPage> {
                 context.go(RouteNames.home);
               }
             },
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Email Field
-                  AppTextField(
-                    controller: _emailController,
-                    label: 'Email Address',
-                    hint: 'alex@voyage.com',
-                    prefixIcon: Icons.mail_outline,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Email is required';
-                      }
-                      if (!Validators.isValidEmail(value)) {
-                        return 'Please enter a valid email address';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  // Password Field
-                  AppTextField(
-                    controller: _passwordController,
-                    label: 'Password',
-                    hint: '••••••••',
-                    prefixIcon: Icons.lock_outline_rounded,
-                    isPassword: true,
-                    obscureText: _obscurePassword,
-                    onToggleObscure: () =>
-                        setState(() => _obscurePassword = !_obscurePassword),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Password is required';
-                      }
-                      if (!Validators.isValidPassword(value)) {
-                        return 'Please enter a valid password (at least 8 characters, including a number and a special character)';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle login logic here
-                      if (_formKey.currentState!.validate()) {
-                        context.read<AuthBloc>().add(
-                          LoginInRequested(
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                          ),
-                        );
-                      }
-                    },
-                    child: Text("Login"),
-                  ),
-                ],
-              ),
-            ),
+            builder: (context, state) {
+              return Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppTextField(
+                      controller: _emailController,
+                      label: 'Email Address',
+                      hint: 'alex@voyage.com',
+                      prefixIcon: Icons.mail_outline,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Email is required';
+                        }
+                        if (!Validators.isValidEmail(value)) {
+                          return 'Please enter a valid email address';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    AppTextField(
+                      controller: _passwordController,
+                      label: 'Password',
+                      hint: '••••••••',
+                      prefixIcon: Icons.lock_outline_rounded,
+                      isPassword: true,
+                      obscureText: _obscurePassword,
+                      onToggleObscure: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Password is required';
+                        }
+                        if (!Validators.isValidPassword(value)) {
+                          return 'Please enter a valid password (at least 8 characters, including a number and a special character)';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: state is AuthLoading
+                          ? null
+                          : () => _onLogin(context),
+                      child: state is AuthLoading
+                          ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                          : const Text("Login"),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),
