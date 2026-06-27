@@ -11,21 +11,44 @@ class AppTheme {
         brightness: Brightness.light,
         primary: AppColors.primary,
         onPrimary: Colors.white,
+        primaryContainer: AppColors.primaryContainer,
+        onPrimaryContainer: AppColors.primaryDim,
         secondary: AppColors.secondary,
         onSecondary: Colors.white,
+        secondaryContainer: AppColors.accent,
+        onSecondaryContainer: Colors.white,
         tertiary: AppColors.tertiary,
         onTertiary: Colors.white,
         error: AppColors.error,
         onError: Colors.white,
-        background: AppColors.backgroundLight,
-        onBackground: AppColors.onSurfaceLight,
         surface: AppColors.surfaceLight,
         onSurface: AppColors.onSurfaceLight,
       ),
 
       scaffoldBackgroundColor: AppColors.backgroundLight,
 
-      // 📝 TEXT
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
+
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+      ),
+
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.primaryDim,
+        ),
+      ),
+
       textTheme: const TextTheme(
         headlineLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
         headlineMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -36,7 +59,6 @@ class AppTheme {
         labelLarge: TextStyle(fontSize: 11, fontWeight: FontWeight.w700),
       ),
 
-      // 🧾 INPUT
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.surfaceSoftLight,
@@ -54,7 +76,6 @@ class AppTheme {
         ),
       ),
 
-      // 📦 CARD
       cardTheme: CardThemeData(
         elevation: 0,
         color: AppColors.surfaceLight,
@@ -74,48 +95,55 @@ class AppTheme {
       colorScheme: ColorScheme(
         brightness: Brightness.dark,
         primary: AppColors.primary,
-        onPrimary: Colors.black,
+        onPrimary: Colors.white,
+        primaryContainer: AppColors.containerDark,
+        onPrimaryContainer: AppColors.onSurfaceDark,
         secondary: AppColors.secondary,
-        onSecondary: Colors.black,
+        onSecondary: Colors.white,
+        secondaryContainer: AppColors.surfaceSoftDark,
+        onSecondaryContainer: AppColors.onSurfaceDark,
         tertiary: AppColors.tertiary,
-        onTertiary: Colors.black,
+        onTertiary: Colors.white,
         error: AppColors.error,
-        onError: Colors.black,
-        background: AppColors.backgroundDark,
-        onBackground: AppColors.onSurfaceDark,
+        onError: Colors.white,
         surface: AppColors.surfaceDark,
         onSurface: AppColors.onSurfaceDark,
       ),
 
       scaffoldBackgroundColor: AppColors.backgroundDark,
 
-      // 📝 TEXT
-      textTheme: const TextTheme(
-        headlineLarge: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.w800,
-          color: Colors.white,
-        ),
-        headlineMedium: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-        titleLarge: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-        titleMedium: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-        ),
-        bodyLarge: TextStyle(fontSize: 14, color: Color(0xFFE4EAF0)),
-        bodyMedium: TextStyle(fontSize: 12, color: Color(0xFFE4EAF0)),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.surfaceDark,
+        foregroundColor: AppColors.onSurfaceDark,
+        elevation: 0,
       ),
 
-      // 🧾 INPUT
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+      ),
+
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.primaryDim,
+        ),
+      ),
+
+      textTheme: const TextTheme(
+        headlineLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+        headlineMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        titleLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        titleMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+        bodyLarge: TextStyle(fontSize: 14),
+        bodyMedium: TextStyle(fontSize: 12),
+        labelLarge: TextStyle(fontSize: 11, fontWeight: FontWeight.w700),
+      ),
+
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.surfaceSoftDark,
@@ -133,12 +161,12 @@ class AppTheme {
         ),
       ),
 
-      // 📦 CARD
       cardTheme: CardThemeData(
         elevation: 0,
         color: AppColors.surfaceDark,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
+
       dividerColor: Colors.white.withOpacity(0.1),
     );
   }

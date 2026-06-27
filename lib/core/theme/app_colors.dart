@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // 🌈 Primary Palette
-  static const Color primary = Color(0xFF8FAFC2);
-  static const Color primaryDim = Color(0xFF7B8FB0);
-  static const Color primaryContainer = Color(0xFFD6E4EC);
 
-  static const Color secondary = Color(0xFFBFA9B9);
-  static const Color tertiary = Color(0xFFC89FB4);
-  static const Color accent = Color(0xFF9C8FB8);
+  static const Color primary = Color(0xFFBFA9B9);
+  static const Color primaryDim = Color(0xFFC89FB4);
+  static const Color primaryContainer = Color(0xFF9C8FB8);
+
+  static const Color secondary = Color(0xFF8FAFC2);
+  static const Color tertiary = Color(0xFF7B8FB0);
+  static const Color accent = Color(0xFFD6E4EC);
 
   // 🌞 Light
   static const Color backgroundLight = Color(0xFFF4F6F8);
