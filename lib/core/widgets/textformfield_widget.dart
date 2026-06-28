@@ -40,21 +40,23 @@ class AppTextField extends StatelessWidget {
       selectionControls: selectionControls,
       onChanged: onChanged,
       validator: validator,
-      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-        fontWeight: FontWeight.w500,
-      ),
+      style: Theme.of(
+        context,
+      ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
       decoration: InputDecoration(
         hintText: hint,
         prefixIcon: prefixIcon != null ? Icon(prefixIcon, size: 20) : null,
         suffixIcon: isPassword
             ? IconButton(
-          icon: Icon(
-            obscureText ? Icons.visibility_rounded : Icons.visibility_off_rounded,
-            size: 20,
-            color: AppColors.outline.withValues(alpha: 0.5),
-          ),
-          onPressed: onToggleObscure,
-        )
+                icon: Icon(
+                  obscureText
+                      ? Icons.visibility_rounded
+                      : Icons.visibility_off_rounded,
+                  size: 20,
+                  color: AppColors.outline.withValues(alpha: 0.5),
+                ),
+                onPressed: onToggleObscure,
+              )
             : null,
       ),
     );
@@ -69,7 +71,9 @@ class AppTextField extends StatelessWidget {
             child: Text(
               label!.toUpperCase(),
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.5),
               ),
             ),
           ),

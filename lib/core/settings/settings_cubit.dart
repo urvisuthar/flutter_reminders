@@ -7,10 +7,12 @@ class SettingsCubit extends Cubit<SettingsState> {
   final LocalStorage _localStorage;
 
   SettingsCubit(this._localStorage)
-      : super(SettingsState(
-    themeMode: ThemeMode.values.byName(_localStorage.getTheme()),
-    locale: Locale(_localStorage.getLocale()),
-  ));
+    : super(
+        SettingsState(
+          themeMode: ThemeMode.values.byName(_localStorage.getTheme()),
+          locale: Locale(_localStorage.getLocale()),
+        ),
+      );
 
   void toggleTheme() {
     final next = state.themeMode == ThemeMode.light

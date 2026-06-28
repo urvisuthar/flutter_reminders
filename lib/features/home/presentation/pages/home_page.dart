@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_reminders/core/settings/settings_cubit.dart';
+import 'package:flutter_reminders/core/storage/local_storage.dart';
 import 'package:flutter_reminders/core/utils/extentions.dart';
-import 'package:flutter_reminders/l10n/app_localizations.dart';
+import 'package:flutter_reminders/init_dependency.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/routes/route_names.dart';
@@ -17,18 +17,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late final LocalStorage _localStorage = serviceLocator<LocalStorage>();
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthUnauthenticated) {
-          context.go(RouteNames.login);
-        }
+        state.whenOrNull(unauthenticated: () => context.go(RouteNames.login));
       },
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text(context.l10n.home),
-          leading: Icon(Icons.menu),
+          leading: IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+          ),
           actions: [
             IconButton(
               icon: const Icon(Icons.brightness_6),
@@ -45,6 +49,94 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ],
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                      backgroundImage: _localStorage.getProfilePicture() != null
+                          ? NetworkImage(_localStorage.getProfilePicture()!)
+                          : null,
+                      child: _localStorage.getProfilePicture() == null
+                          ? Icon(
+                              Icons.person,
+                              size: 30,
+                              color: Theme.of(context).colorScheme.primary,
+                            )
+                          : null,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      _localStorage.getUsername() ?? 'User',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      _localStorage.getEmail() ?? '',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onPrimary.withOpacity(0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.home_outlined),
+                title: Text(context.l10n.home),
+                selected: true,
+                onTap: () => Navigator.of(context).pop(),
+              ),
+              ListTile(
+                leading: const Icon(Icons.person_outline),
+                title: const Text("Profile"),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  context.push(RouteNames.profile);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.brightness_6),
+                title: const Text("Toggle Theme"),
+                onTap: () {
+                  context.read<SettingsCubit>().toggleTheme();
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.translate),
+                title: const Text("Language"),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  showLanguageDialog();
+                },
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: Text(context.l10n.logout),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  showLogoutDialog();
+                },
+              ),
+            ],
+          ),
         ),
         body: Center(child: Text(context.l10n.welcome)),
       ),
@@ -95,7 +187,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ElevatedButton(
             onPressed: () {
-              context.read<AuthBloc>().add(LogoutRequested());
+              context.read<AuthBloc>().add(const AuthEvent.logoutRequested());
               Navigator.of(context).pop();
             },
             child: Text(context.l10n.logout),

@@ -16,7 +16,9 @@ class JwtInterceptor extends Interceptor {
 
   @override
   void onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     // Skip login API
     if (options.path != ApiEndpoints.login) {
       final token = await _tokenStorage.getAccessToken();
@@ -33,10 +35,11 @@ class JwtInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     final statusCode = err.response?.statusCode;
 
-    if ((statusCode == 401 || statusCode == 403) &&
-        !_isHandlingUnauthorized) {
+    if ((statusCode == 401 || statusCode == 403) && !_isHandlingUnauthorized) {
       _isHandlingUnauthorized = true;
-      print('[Auth] Session expired (HTTP $statusCode) — auto logout at ${DateTime.now()}');
+      print(
+        '[Auth] Session expired (HTTP $statusCode) — auto logout at ${DateTime.now()}',
+      );
       await _tokenStorage.clear();
       await _localStorage.clear();
 

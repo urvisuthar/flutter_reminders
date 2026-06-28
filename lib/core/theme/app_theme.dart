@@ -44,9 +44,7 @@ class AppTheme {
       ),
 
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          foregroundColor: AppColors.primaryDim,
-        ),
+        style: TextButton.styleFrom(foregroundColor: AppColors.primaryDim),
       ),
 
       textTheme: const TextTheme(
@@ -129,9 +127,7 @@ class AppTheme {
       ),
 
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          foregroundColor: AppColors.primaryDim,
-        ),
+        style: TextButton.styleFrom(foregroundColor: AppColors.primaryDim),
       ),
 
       textTheme: const TextTheme(

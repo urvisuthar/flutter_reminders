@@ -8,6 +8,7 @@ class LocalStorage {
   static const _userIdKey = 'user_id';
   static const _usernameKey = 'username';
   static const _emailKey = 'email';
+  static const _profilePictureKey = 'profile_picture';
   static const _themeKey = 'theme';
   static const _localeKey = 'locale';
 
@@ -15,25 +16,32 @@ class LocalStorage {
     int? userId,
     String? username,
     String? email,
+    String? profilePicture,
   }) async {
     if (userId != null) await _prefs.setInt(_userIdKey, userId);
     if (username != null) await _prefs.setString(_usernameKey, username);
     if (email != null) await _prefs.setString(_emailKey, email);
+    if (profilePicture != null) {
+      await _prefs.setString(_profilePictureKey, profilePicture);
+    }
   }
 
   int? getUserId() => _prefs.getInt(_userIdKey);
   String? getUsername() => _prefs.getString(_usernameKey);
   String? getEmail() => _prefs.getString(_emailKey);
+  String? getProfilePicture() => _prefs.getString(_profilePictureKey);
 
   Future<void> clear() async {
     await _prefs.remove(_userIdKey);
     await _prefs.remove(_usernameKey);
     await _prefs.remove(_emailKey);
+    await _prefs.remove(_profilePictureKey);
   }
 
   Future<void> saveTheme(String theme) => _prefs.setString(_themeKey, theme);
   String getTheme() => _prefs.getString(_themeKey) ?? 'light';
 
-  Future<void> saveLocale(String locale) => _prefs.setString(_localeKey, locale);
+  Future<void> saveLocale(String locale) =>
+      _prefs.setString(_localeKey, locale);
   String getLocale() => _prefs.getString(_localeKey) ?? 'en';
 }

@@ -1,4 +1,3 @@
-import 'package:flutter_reminders/core/storage/local_storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class TokenStorage {
@@ -43,6 +42,9 @@ class TokenStorage {
 
     final tokenValid = await isTokenValid();
     if (!tokenValid) {
+      print(
+        '[Auth] Session expired (tokenInValid $tokenValid) — auto logout at ${DateTime.now()}',
+      );
       await clear();
       return false;
     }

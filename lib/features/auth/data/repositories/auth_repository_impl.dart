@@ -41,6 +41,7 @@ class AuthRepositoryImpl implements AuthRepository {
         userId: authModel.user.id,
         username: '${authModel.user.firstName} ${authModel.user.lastName}',
         email: authModel.user.email,
+        profilePicture: authModel.user.profilePicture,
       );
 
       return Right(authModel.toEntity());

@@ -24,7 +24,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: {'email': email, 'password': password},
       );
 
-      return AuthModel.fromJson(response.data);
+      return AuthModel.fromJson(response.data['data']);
     } on DioException catch (e) {
       throw ServerException(e.message ?? 'Network error');
     }

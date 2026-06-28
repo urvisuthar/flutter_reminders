@@ -1,25 +1,13 @@
 part of 'auth_bloc.dart';
 
-sealed class AuthEvent extends Equatable {
-  const AuthEvent();
-}
+@freezed
+sealed class AuthEvent with _$AuthEvent {
+  const factory AuthEvent.loginRequested({
+    required String email,
+    required String password,
+  }) = _LoginRequested;
 
-class LoginInRequested extends AuthEvent {
-  final String email;
-  final String password;
+  const factory AuthEvent.checkAuthStatus() = _CheckAuthStatus;
 
-  const LoginInRequested({required this.email, required this.password});
-
-  @override
-  List<Object> get props => [email, password];
-}
-
-class CheckAuthStatusRequested extends AuthEvent {
-  @override
-  List<Object> get props => [];
-}
-
-class LogoutRequested extends AuthEvent {
-  @override
-  List<Object> get props => [];
+  const factory AuthEvent.logoutRequested() = _LogoutRequested;
 }

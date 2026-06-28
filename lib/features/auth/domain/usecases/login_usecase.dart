@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_reminders/core/error/failures.dart';
 import 'package:flutter_reminders/core/usecases/usecase.dart';
 import 'package:flutter_reminders/features/auth/domain/entities/auth_entity.dart';
@@ -19,12 +18,9 @@ class LoginUsecase implements Usecase<AuthEntity, AuthParams> {
   }
 }
 
-class AuthParams extends Equatable {
+class AuthParams {
   final String email;
   final String password;
 
   const AuthParams({required this.email, required this.password});
-
-  @override
-  List<Object?> get props => [email, password];
 }

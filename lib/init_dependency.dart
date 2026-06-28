@@ -12,6 +12,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/settings/settings_cubit.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/domain/usecases/login_usecase.dart';
+import 'features/profile/data/datasource/profile_remote_data_source.dart';
+import 'features/profile/data/repositories/profile_repository_impl.dart';
+import 'features/profile/domain/repositories/profile_repository.dart';
+import 'features/profile/domain/usecases/getprofile_usecase.dart';
+import 'features/profile/presentation/cubit/profile_cubit.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -40,6 +45,7 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton(() => SettingsCubit(serviceLocator()));
 
   _initAuth();
+  _initProfile();
 }
 
 void _initAuth() {
@@ -67,4 +73,15 @@ void _initAuth() {
       logoutUseCase: serviceLocator(),
     ),
   );
+}
+
+void _initProfile() {
+  serviceLocator.registerFactory<ProfileRemoteDataSource>(
+    () => ProfileRemoteDataSourceImpl(serviceLocator()),
+  );
+  serviceLocator.registerFactory<ProfileRepository>(
+    () => ProfileRepositoryImpl(serviceLocator(), serviceLocator()),
+  );
+  serviceLocator.registerFactory(() => GetProfileUseCase(serviceLocator()));
+  serviceLocator.registerFactory(() => ProfileCubit(serviceLocator()));
 }

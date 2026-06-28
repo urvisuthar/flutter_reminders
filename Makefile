@@ -37,6 +37,15 @@ clean:
 get:
 	flutter pub get
 
+# CODE GENERATION
+generate:
+	flutter pub get
+	dart run build_runner build --delete-conflicting-outputs
+	dart format .
+
+# FULL SETUP — clean + get + generate
+setup: clean get generate
+
 refresh: clean get
 
 # run command "choco install make" to install Make on Windows, then you can use the above commands in your terminal to manage your Flutter environment configurations.
