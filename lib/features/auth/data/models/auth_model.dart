@@ -1,36 +1,28 @@
-import 'package:flutter_reminders/features/auth/data/models/user_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_reminders/features/auth/domain/entities/auth_entity.dart';
+import 'user_model.dart';
 
-class AuthModel {
-  final UserModel user;
-  final String accessToken;
-  final String tokenType;
-  final int expiresIn;
+part 'auth_model.freezed.dart';
+part 'auth_model.g.dart';
 
-  AuthModel({
-    required this.user,
-    required this.accessToken,
-    required this.tokenType,
-    required this.expiresIn,
-  });
+@freezed
+abstract class AuthModel with _$AuthModel {
+  const AuthModel._();
 
-  factory AuthModel.fromJson(Map<String, dynamic> json) {
-    final data = json['data'];
+  const factory AuthModel({
+    required UserModel user,
+    @JsonKey(name: 'access_token') required String accessToken,
+    @JsonKey(name: 'token_type') required String tokenType,
+    @JsonKey(name: 'expires_in') required int expiresIn,
+  }) = _AuthModel;
 
-    return AuthModel(
-      user: UserModel.fromJson(data['user']),
-      accessToken: data['access_token'],
-      tokenType: data['token_type'],
-      expiresIn: data['expires_in'],
-    );
-  }
+  factory AuthModel.fromJson(Map<String, dynamic> json) =>
+      _$AuthModelFromJson(json);
 
-  AuthEntity toEntity() {
-    return AuthEntity(
-      user: user.toEntity(),
-      accessToken: accessToken,
-      tokenType: tokenType,
-      expiresIn: expiresIn,
-    );
-  }
+  AuthEntity toEntity() => AuthEntity(
+    user: user.toEntity(),
+    accessToken: accessToken,
+    tokenType: tokenType,
+    expiresIn: expiresIn,
+  );
 }

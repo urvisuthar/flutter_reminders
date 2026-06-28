@@ -2,19 +2,19 @@
 
 ---
 
-## 1. flutter_bloc + equatable
+## 1. flutter_bloc
 
 **pubspec.yaml:**
 
     flutter_bloc: ^9.1.1
-    equatable: ^2.0.8
 
 **Steps:**
 - `flutter pub get`
 - Extend `Cubit<State>` or `Bloc<Event, State>` for state management
-- Extend `Equatable` in state/event classes and override `props`
+- Use Freezed for state/event classes (see section 12)
 - Wrap app with `MultiBlocProvider` in `main.dart`
-- Use `BlocProvider`, `BlocBuilder`, `BlocListener` in widgets
+- Use `BlocProvider`, `BlocBuilder`, `BlocListener`, `BlocConsumer` in widgets
+- In listeners use `state.whenOrNull(...)`, in builders use `state.when(...)` or `state.maybeWhen(...)`
 
 ---
 
@@ -193,3 +193,54 @@
 | `make clean` | Run `flutter clean` |
 | `make get` | Run `flutter pub get` |
 | `make refresh` | Run `flutter clean` then `flutter pub get` |
+| `make generate` | `pub get` + `build_runner` + `dart format` |
+| `make setup` | Full clean + get + generate |
+
+---
+
+## 12. Freezed (Immutable Classes + Code Generation)
+
+**pubspec.yaml:**
+
+    # dependencies
+    freezed_annotation: ^3.1.0
+    json_annotation: ^4.12.0
+
+    # dev_dependencies
+    freezed: ^3.2.5
+    json_serializable: ^6.14.0
+    build_runner: ^2.15.0
+
+**Steps:**
+- `flutter pub get`
+- Add to `.gitignore` to exclude generated files:
+
+      *.freezed.dart
+      *.g.dart
+
+- Run `make generate` to generate all Freezed files
+
+**Usage patterns:**
+
+| Use case | Annotation | Part directives |
+|---|---|---|
+| State / Event (union) | `@freezed` | `part 'x.freezed.dart'` |
+| Entity / Model (data class) | `@freezed` | `part 'x.freezed.dart'` |
+| Model with JSON | `@freezed` | `part 'x.freezed.dart'` + `part 'x.g.dart'` |
+| Simple data carrier (params, failure) | plain class | none |
+
+**State pattern:**
+```dart
+@freezed
+class ProfileState with _$ProfileState {
+  const factory ProfileState.initial() = _Initial;
+  const factory ProfileState.loading() = _Loading;
+  const factory ProfileState.success(UserEntity user) = _Success;
+  const factory ProfileState.failure(Failure failure) = _Failure;
+}
+```
+
+**When to use which method:**
+- `state.when(...)` — inside builder, must handle all states, returns a widget
+- `state.whenOrNull(...)` — inside listener, only handle specific states
+- `state.maybeWhen(orElse: ...)` — need a single value with a fallback

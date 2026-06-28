@@ -1,12 +1,14 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_reminders/core/error/failures.dart';
 import 'package:fpdart/fpdart.dart';
 
-abstract interface class Usecase<SuccessType, Params>{
-  Future<Either<Failure,SuccessType>> call(Params params);
+part 'usecase.freezed.dart';
+
+abstract interface class Usecase<SuccessType, Params> {
+  Future<Either<Failure, SuccessType>> call(Params params);
 }
 
-class NoParams extends Equatable {
-  @override
-  List<Object?> get props => [];
+@freezed
+class NoParams with _$NoParams {
+  const factory NoParams() = _NoParams;
 }

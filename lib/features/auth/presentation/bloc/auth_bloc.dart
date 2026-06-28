@@ -1,16 +1,15 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_reminders/core/usecases/usecase.dart';
 import 'package:flutter_reminders/features/auth/domain/entities/auth_entity.dart';
 import 'package:flutter_reminders/features/auth/domain/usecases/checkauthstatus_logout_usecase.dart';
 import 'package:flutter_reminders/features/auth/domain/usecases/login_usecase.dart';
 
 part 'auth_event.dart';
-
 part 'auth_state.dart';
+part 'auth_bloc.freezed.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-
   final LoginUsecase _loginUsecase;
   final CheckAuthStatusUseCase _checkAuthStatusUseCase;
   final LogoutUseCase _logoutUseCase;
@@ -22,47 +21,45 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }) : _loginUsecase = loginUsecase,
        _checkAuthStatusUseCase = checkAuthStatusUseCase,
        _logoutUseCase = logoutUseCase,
-       super(AuthInitial()) {
-    // on<AuthEvent>((event, emit) {
-    //   // TODO: implement event handler
-    // });
-    on<LoginInRequested>(_onLoginRequested);
-    on<CheckAuthStatusRequested>(_checkAuthStatusRequested);
-    on<LogoutRequested>(_onLogoutRequested);
+       super(const AuthState.initial()) {
+    on<_LoginRequested>(_onLoginRequested);
+    on<_CheckAuthStatus>(_onCheckAuthStatus);
+    on<_LogoutRequested>(_onLogoutRequested);
   }
 
-  void _onLoginRequested(
-    LoginInRequested event,
+  Future<void> _onLoginRequested(
+    _LoginRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
+    emit(const AuthState.loading());
     final result = await _loginUsecase(
       AuthParams(email: event.email, password: event.password),
     );
     result.fold(
-      (failure) => emit(AuthFailure(failure.message)),
-      (authEntity) => emit(AuthSuccess(authEntity)),
+      (failure) => emit(AuthState.failure(failure.message)),
+      (authEntity) => emit(AuthState.success(authEntity)),
     );
   }
 
-  void _checkAuthStatusRequested(
-    CheckAuthStatusRequested event,
+  Future<void> _onCheckAuthStatus(
+    _CheckAuthStatus event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
-
-    final result = await _checkAuthStatusUseCase.call(NoParams());
-
-    if (result) {
-      emit(AuthAuthenticated());
-    } else {
-      emit(AuthUnauthenticated());
-    }
+    emit(const AuthState.loading());
+    final isLoggedIn = await _checkAuthStatusUseCase.call(NoParams());
+    emit(
+      isLoggedIn
+          ? const AuthState.authenticated()
+          : const AuthState.unauthenticated(),
+    );
   }
 
-  void _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
+  Future<void> _onLogoutRequested(
+    _LogoutRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthState.loading());
     await _logoutUseCase.call();
-    emit(AuthUnauthenticated());
+    emit(const AuthState.unauthenticated());
   }
 }

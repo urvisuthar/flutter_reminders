@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   void _onLogin(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       context.read<AuthBloc>().add(
-        LoginInRequested(
+        AuthEvent.loginRequested(
           email: _emailController.text,
           password: _passwordController.text,
         ),
@@ -48,15 +48,19 @@ class _LoginPageState extends State<LoginPage> {
           alignment: Alignment.center,
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
-              if (state is AuthFailure) {
-                AppSnackbar.showError(context, state.message);
-              }
-              if (state is AuthSuccess) {
-                AppSnackbar.showSuccess(context, "Login successful!");
-                context.go(RouteNames.home);
-              }
+              state.whenOrNull(
+                failure: (message) => AppSnackbar.showError(context, message),
+                success: (_) {
+                  AppSnackbar.showSuccess(context, "Login successful!");
+                  context.go(RouteNames.home);
+                },
+              );
             },
             builder: (context, state) {
+              final isLoading = state.maybeWhen(
+                loading: () => true,
+                orElse: () => false,
+              );
               return Form(
                 key: _formKey,
                 child: Column(
@@ -99,18 +103,16 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: state is AuthLoading
-                          ? null
-                          : () => _onLogin(context),
-                      child: state is AuthLoading
+                      onPressed: isLoading ? null : () => _onLogin(context),
+                      child: isLoading
                           ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
                           : const Text("Login"),
                     ),
                   ],

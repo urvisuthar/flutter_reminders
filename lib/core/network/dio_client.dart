@@ -25,7 +25,7 @@ class DioClient {
     // 🔐 JWT Interceptor
     dio.interceptors.add(
       JwtInterceptor(tokenStorage, localStorage, () {
-        serviceLocator<AuthBloc>().add(LogoutRequested());
+        serviceLocator<AuthBloc>().add(const AuthEvent.logoutRequested());
       }),
     );
 

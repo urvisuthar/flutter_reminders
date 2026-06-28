@@ -19,7 +19,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
 
     Future.delayed(const Duration(seconds: 5), () {
-      context.read<AuthBloc>().add(CheckAuthStatusRequested());
+      context.read<AuthBloc>().add(const AuthEvent.checkAuthStatus());
     });
   }
 
@@ -27,13 +27,10 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthAuthenticated) {
-          context.go(RouteNames.home);
-          print("LOGGED IN");
-        } else if (state is AuthUnauthenticated) {
-          print("NOT LOGGED IN");
-          context.go(RouteNames.login);
-        }
+        state.whenOrNull(
+          authenticated: () => context.go(RouteNames.home),
+          unauthenticated: () => context.go(RouteNames.login),
+        );
       },
       child: Scaffold(
         backgroundColor: AppColors.primary,

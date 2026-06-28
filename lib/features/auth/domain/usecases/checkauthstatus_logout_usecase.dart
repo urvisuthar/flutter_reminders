@@ -1,6 +1,4 @@
-import 'package:flutter_reminders/core/error/failures.dart';
 import 'package:flutter_reminders/core/usecases/usecase.dart';
-import 'package:fpdart/src/either.dart';
 
 import '../repositories/auth_repository.dart';
 
