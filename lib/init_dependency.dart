@@ -5,6 +5,8 @@ import 'package:flutter_reminders/features/auth/data/datasources/auth_remote_dat
 import 'package:flutter_reminders/features/auth/domain/repositories/auth_repository.dart';
 import 'package:flutter_reminders/features/auth/domain/usecases/checkauthstatus_logout_usecase.dart';
 import 'package:flutter_reminders/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:flutter_reminders/features/reminder/domain/usecases/add_reminder_usecase.dart';
+import 'package:flutter_reminders/features/reminder/presentation/bloc/reminder_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +19,9 @@ import 'features/profile/data/repositories/profile_repository_impl.dart';
 import 'features/profile/domain/repositories/profile_repository.dart';
 import 'features/profile/domain/usecases/getprofile_usecase.dart';
 import 'features/profile/presentation/cubit/profile_cubit.dart';
+import 'features/reminder/data/datasource/reminder_remote_data_source.dart';
+import 'features/reminder/data/repositories/reminder_repository_impl.dart';
+import 'features/reminder/domain/repositories/reminder_repository.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -46,6 +51,7 @@ Future<void> initDependencies() async {
 
   _initAuth();
   _initProfile();
+  _initReminder();
 }
 
 void _initAuth() {
@@ -84,4 +90,17 @@ void _initProfile() {
   );
   serviceLocator.registerFactory(() => GetProfileUseCase(serviceLocator()));
   serviceLocator.registerFactory(() => ProfileCubit(serviceLocator()));
+}
+
+void _initReminder() {
+  serviceLocator.registerFactory<ReminderRemoteDataSource>(
+    () => ReminderRemoteDataSourceImpl(serviceLocator()),
+  );
+  serviceLocator.registerFactory<ReminderRepository>(
+    () => ReminderRepositoryImpl(serviceLocator()),
+  );
+  serviceLocator.registerFactory(() => AddReminderUsecase(serviceLocator()));
+  serviceLocator.registerFactory(
+    () => ReminderBloc(addReminderUsecase: serviceLocator()),
+  );
 }

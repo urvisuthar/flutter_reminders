@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late final LocalStorage _localStorage = serviceLocator<LocalStorage>();
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
@@ -139,6 +140,10 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         body: Center(child: Text(context.l10n.welcome)),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => context.push(RouteNames.addReminder),
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

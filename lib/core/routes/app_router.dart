@@ -5,8 +5,11 @@ import 'package:flutter_reminders/features/auth/presentation/pages/splash_page.d
 import 'package:flutter_reminders/features/home/presentation/pages/home_page.dart';
 import 'package:flutter_reminders/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter_reminders/features/profile/presentation/pages/profile_page.dart';
+import 'package:flutter_reminders/features/reminder/presentation/pages/add_reminder_page.dart';
 import 'package:flutter_reminders/init_dependency.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../features/reminder/presentation/bloc/reminder_bloc.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: RouteNames.splash,
@@ -28,6 +31,13 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => BlocProvider(
         create: (_) => serviceLocator<ProfileCubit>(),
         child: const ProfilePage(),
+      ),
+    ),
+    GoRoute(
+      path: RouteNames.addReminder,
+      builder: (context, state) => BlocProvider(
+        create: (_) => serviceLocator<ReminderBloc>(),
+        child: const AddReminderPage(),
       ),
     ),
   ],
