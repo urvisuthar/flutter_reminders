@@ -12,9 +12,7 @@ class GetReminderByIdUsecase
   GetReminderByIdUsecase(this.reminderRepository);
 
   @override
-  Future<Either<Failure, ReminderEntity>> call(
-    GetReminderByIdParams params,
-  ) {
+  Future<Either<Failure, ReminderEntity>> call(GetReminderByIdParams params) {
     return reminderRepository.getReminderById(id: params.id);
   }
 }

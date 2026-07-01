@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_reminders/core/routes/app_router.dart';
@@ -7,10 +8,12 @@ import 'package:flutter_reminders/init_dependency.dart';
 import 'core/settings/settings_cubit.dart';
 import 'core/settings/settings_state.dart';
 import 'core/theme/app_theme.dart';
+import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initDependencies();
 
   runApp(

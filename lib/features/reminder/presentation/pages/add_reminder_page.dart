@@ -82,7 +82,6 @@ class _AddReminderPageState extends State<AddReminderPage> {
     _deletedImageIds.add(_existingImages[index].id);
     _existingImages.removeAt(index);
     print('Existing image removed with ID: ${_deletedImageIds}');
-
   });
 
   void _submitForm() {

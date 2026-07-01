@@ -43,7 +43,6 @@ class ReminderBloc extends Bloc<ReminderEvent, ReminderState> {
     on<_DeleteReminder>(_onDeleteReminder);
   }
 
-
   Future<void> _onAddReminder(
     _AddReminder event,
     Emitter<ReminderState> emit,

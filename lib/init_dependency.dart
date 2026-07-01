@@ -111,12 +111,8 @@ void _initReminder() {
   serviceLocator.registerFactory(
     () => GetReminderByIdUsecase(serviceLocator()),
   );
-  serviceLocator.registerFactory(
-    () => UpdateReminderUsecase(serviceLocator()),
-  );
-  serviceLocator.registerFactory(
-    () => DeleteReminderUsecase(serviceLocator()),
-  );
+  serviceLocator.registerFactory(() => UpdateReminderUsecase(serviceLocator()));
+  serviceLocator.registerFactory(() => DeleteReminderUsecase(serviceLocator()));
   serviceLocator.registerFactory(
     () => ReminderBloc(
       addReminderUsecase: serviceLocator(),

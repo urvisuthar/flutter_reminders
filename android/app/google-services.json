@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "238114527059",
+    "project_id": "daily-reminders-2a399",
+    "storage_bucket": "daily-reminders-2a399.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:238114527059:android:a6b3201c57d8c90fb0b3a6",
+        "android_client_info": {
+          "package_name": "com.daily.reminders"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQpM4sfSy2XHiUAhjGE7yvRXVG8T6IM2o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:238114527059:android:3a0f5994109f1383b0b3a6",
+        "android_client_info": {
+          "package_name": "com.daily.reminders.sit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQpM4sfSy2XHiUAhjGE7yvRXVG8T6IM2o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:238114527059:android:ffbaa2f3dfc84b68b0b3a6",
+        "android_client_info": {
+          "package_name": "com.daily.reminders.uat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQpM4sfSy2XHiUAhjGE7yvRXVG8T6IM2o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
