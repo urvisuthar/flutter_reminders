@@ -32,10 +32,37 @@ class DioClient {
 
     // 📄 Logging (non-prod only)
     if (AppConfig.isDebugLoggingEnabled) {
+      // PrettyDioLogger prints FormData fields via a Map, which silently
+      // drops duplicate keys (e.g. repeated 'deleted_image_ids[]' entries).
+      // We log the request body ourselves so nothing gets hidden, and turn
+      // off PrettyDioLogger's own body printing below to avoid double logs.
+      dio.interceptors.add(
+        InterceptorsWrapper(
+          onRequest: (options, handler) {
+            final data = options.data;
+            if (data is FormData) {
+              print('╔ Form Data (raw fields, duplicates preserved)');
+              for (final field in data.fields) {
+                print('║ ${field.key}: ${field.value}');
+              }
+              for (final file in data.files) {
+                print('║ ${file.key}: ${file.value.filename}');
+              }
+              print('╚══');
+            } else if (data != null) {
+              print('╔ Request Body');
+              print('║ $data');
+              print('╚══');
+            }
+            handler.next(options);
+          },
+        ),
+      );
+
       dio.interceptors.add(
         PrettyDioLogger(
           requestHeader: true,
-          requestBody: true,
+          requestBody: false,
           responseBody: true,
           responseHeader: false,
           error: true,

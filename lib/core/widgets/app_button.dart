@@ -28,15 +28,15 @@ class AppButton extends StatelessWidget {
             ),
           )
         : icon != null
-            ? Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(icon, size: 18),
-                  const SizedBox(width: 8),
-                  Text(label),
-                ],
-              )
-            : Text(label);
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 18),
+              const SizedBox(width: 8),
+              Text(label),
+            ],
+          )
+        : Text(label);
 
     final button = ElevatedButton(
       onPressed: isLoading ? null : onPressed,

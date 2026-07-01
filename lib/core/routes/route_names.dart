@@ -3,8 +3,7 @@ class RouteNames {
   static const String login = '/login';
   static const String home = '/home';
   static const String profile = '/profile';
-  static const reminders = '/reminders';        // list screen
-  static const addReminder = '/reminders/add';  // add form
-  // static const reminderDetail = '/reminders/:id';  // detail screen
-  // static const editReminder = '/reminders/:id/edit'; // edit form
+  static const reminders = '/reminders'; // list screen
+  static const addReminder = '/reminders/add'; // add form
+  static const editReminder = '/reminders/:id/edit'; // edit form
 }
