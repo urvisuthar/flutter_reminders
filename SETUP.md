@@ -88,7 +88,21 @@
 - Create `lib/core/routes/route_names.dart` with route path constants
 - Create `lib/core/routes/app_router.dart` with `GoRouter` instance and all `GoRoute` entries
 - Use `MaterialApp.router(routerConfig: appRouter)` in `main.dart`
-- Navigate using `context.go(RouteNames.x)` in widgets
+- Navigate using `context.go(RouteNames.x)` to replace history, or `context.push(RouteNames.x)` to stack a new route
+
+**Passing data without a network round-trip (`extra`):**
+- For routes with a dynamic path param (e.g. `editReminder = '/reminders/:id/edit'`), the `:id` segment is mostly for a readable/deep-link-able URL — the actual object is passed via `context.push(url, extra: entity)` and read back in the route's `builder` as `state.extra as MyEntity?`
+- Avoids an extra `getById` API call when the caller already has the full entity in hand (e.g. from a list screen)
+- Tradeoff: `extra` only survives in-app navigation. A cold start from an external deep link (OS link, push notification) has `extra == null`, so the builder should be able to fall back to fetching by the path param `id` if you need real deep-linking support
+
+**Auth guard (top-level `redirect`):**
+- Add a `redirect: (context, state) async { ... }` callback on the `GoRouter` constructor — it runs before every navigation (`go`/`push`/deep link) and can return a new path to redirect to, or `null` to proceed
+- Pattern used here: maintain a `_publicRoutes` set (splash, login, signup); check `TokenStorage.isLoggedIn()` (via `serviceLocator`) and `state.matchedLocation` against it
+  - Not logged in + not a public route → redirect to `login`
+  - Logged in + on `login`/`signup` → redirect to `home`
+  - Otherwise → return `null` (proceed as normal)
+- Deliberately leave `splash` unredirected either way, so its own animation + `AuthBloc.checkAuthStatus()` flow still runs on cold start
+- Limitation: `redirect` only fires on navigation events — it won't auto-kick a user off a protected screen if their token expires while they're already sitting on it (would need `refreshListenable` wired to an auth `ChangeNotifier` for that)
 
 ---
 
@@ -244,3 +258,33 @@ class ProfileState with _$ProfileState {
 - `state.when(...)` — inside builder, must handle all states, returns a widget
 - `state.whenOrNull(...)` — inside listener, only handle specific states
 - `state.maybeWhen(orElse: ...)` — need a single value with a fallback
+
+---
+
+## 13. image_picker (Gallery / Camera Image Selection)
+
+**pubspec.yaml:**
+
+    image_picker: ^1.2.2
+
+**Steps:**
+- `flutter pub get`
+- Use `ImagePicker().pickImage(source: ImageSource.gallery)` for a single image (e.g. profile picture)
+- Use `ImagePicker().pickMultiImage()` for multiple images (e.g. reminder attachments)
+- Convert the returned `XFile` to `File` via `File(pickedFile.path)` before sending as multipart form data
+- Preview picked images locally with `Image.file(...)`; keep them in local `State` (e.g. `List<File> _selectedImages`), not in the bloc state
+
+---
+
+## 14. pretty_dio_logger (Request/Response Logging)
+
+**pubspec.yaml:**
+
+    pretty_dio_logger: ^1.4.0
+
+**Steps:**
+- `flutter pub get`
+- Add `PrettyDioLogger` to `dio.interceptors` in `DioClient`, guarded by `AppConfig.isDebugLoggingEnabled` (never log in prod)
+- Configure `requestHeader`, `requestBody`, `responseBody` flags as needed
+
+**Known limitation:** `PrettyDioLogger` prints `FormData` fields by collapsing them into a `Map`, which silently drops repeated keys (e.g. multiple `deleted_image_ids[]` entries — only the last value survives in the log, even though all values are still sent correctly on the wire). Work around this with a custom `InterceptorsWrapper.onRequest` placed before `PrettyDioLogger` that prints `FormData.fields`/`.files` directly (a `List<MapEntry>`, so duplicates are preserved), and set `requestBody: false` on `PrettyDioLogger` to avoid double-printing the body.

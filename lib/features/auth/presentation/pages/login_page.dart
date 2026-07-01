@@ -115,6 +115,11 @@ class _LoginPageState extends State<LoginPage> {
                             )
                           : const Text("Login"),
                     ),
+                    const SizedBox(height: 12),
+                    TextButton(
+                      onPressed: () => context.push(RouteNames.signup),
+                      child: const Text("Don't have an account? Sign Up"),
+                    ),
                   ],
                 ),
               );

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_reminders/core/error/failures.dart';
 import 'package:flutter_reminders/core/storage/local_storage.dart';
 import 'package:flutter_reminders/core/storage/token_storage.dart';
@@ -28,6 +30,51 @@ class AuthRepositoryImpl implements AuthRepository {
       final authModel = await remoteDataSource.login(
         email: email,
         password: password,
+      );
+
+      // Save access token to secure storage
+      await tokenStorage.saveTokens(
+        accessToken: authModel.accessToken,
+        expiresIn: authModel.expiresIn,
+      );
+
+      // Save user data to local storage
+      await localStorage.saveUser(
+        userId: authModel.user.id,
+        username: '${authModel.user.firstName} ${authModel.user.lastName}',
+        email: authModel.user.email,
+        profilePicture: authModel.user.profilePicture,
+      );
+
+      return Right(authModel.toEntity());
+    } on ServerException catch (e) {
+      return Left(Failure(e.message));
+    } catch (e) {
+      return Left(Failure('Unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthEntity>> signup({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+    required String phoneNo,
+    int socialMediaFlag = 0,
+    String? token,
+    File? profilePicture,
+  }) async {
+    try {
+      final authModel = await remoteDataSource.signup(
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+        phoneNo: phoneNo,
+        socialMediaFlag: socialMediaFlag,
+        token: token,
+        profilePicture: profilePicture,
       );
 
       // Save access token to secure storage

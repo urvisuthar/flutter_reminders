@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_reminders/core/routes/route_names.dart';
 import 'package:flutter_reminders/features/auth/presentation/pages/login_page.dart';
+import 'package:flutter_reminders/features/auth/presentation/pages/signup_page.dart';
 import 'package:flutter_reminders/features/auth/presentation/pages/splash_page.dart';
 import 'package:flutter_reminders/features/home/presentation/pages/home_page.dart';
 import 'package:flutter_reminders/features/profile/presentation/cubit/profile_cubit.dart';
@@ -14,7 +15,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/reminder/presentation/bloc/reminder_bloc.dart';
 import '../storage/token_storage.dart';
 
-const _publicRoutes = {RouteNames.splash, RouteNames.login};
+const _publicRoutes = {RouteNames.splash, RouteNames.login, RouteNames.signup};
 
 final GoRouter appRouter = GoRouter(
   initialLocation: RouteNames.splash,
@@ -30,7 +31,10 @@ final GoRouter appRouter = GoRouter(
     if (!isLoggedIn && !isPublicRoute) {
       return RouteNames.login;
     }
-    if (isLoggedIn && state.matchedLocation == RouteNames.login) {
+    final isAuthPage =
+        state.matchedLocation == RouteNames.login ||
+        state.matchedLocation == RouteNames.signup;
+    if (isLoggedIn && isAuthPage) {
       return RouteNames.home;
     }
     return null;
@@ -43,6 +47,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteNames.login,
       builder: (context, state) => const LoginPage(),
+    ),
+    GoRoute(
+      path: RouteNames.signup,
+      builder: (context, state) => const SignupPage(),
     ),
     GoRoute(
       path: RouteNames.home,

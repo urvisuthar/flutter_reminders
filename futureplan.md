@@ -311,3 +311,4 @@ video or youtube tutorial links for each step (optional)
 calendare view things 
 graphs for date vs reminders count (optional)
 cancel api call if user navigates away from the page (optional)
+need to store push notification in remote config or firbase stogae and nee to show as bell here in app
