@@ -28,10 +28,5 @@ class GetRemindersParams {
   final String? search;
   final String? date;
 
-  GetRemindersParams({
-    this.page = 1,
-    this.limit = 10,
-    this.search,
-    this.date,
-  });
+  GetRemindersParams({this.page = 1, this.limit = 10, this.search, this.date});
 }

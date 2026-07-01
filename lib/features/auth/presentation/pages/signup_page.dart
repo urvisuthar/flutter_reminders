@@ -97,10 +97,7 @@ class _SignupPageState extends State<SignupPage> {
                               ? FileImage(_profilePicture!)
                               : null,
                           child: _profilePicture == null
-                              ? const Icon(
-                                  Icons.add_a_photo_outlined,
-                                  size: 28,
-                                )
+                              ? const Icon(Icons.add_a_photo_outlined, size: 28)
                               : null,
                         ),
                       ),
@@ -156,9 +153,8 @@ class _SignupPageState extends State<SignupPage> {
                       prefixIcon: Icons.lock_outline_rounded,
                       isPassword: true,
                       obscureText: _obscurePassword,
-                      onToggleObscure: () => setState(
-                        () => _obscurePassword = !_obscurePassword,
-                      ),
+                      onToggleObscure: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Password is required';

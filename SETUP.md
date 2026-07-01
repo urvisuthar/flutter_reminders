@@ -288,3 +288,38 @@ class ProfileState with _$ProfileState {
 - Configure `requestHeader`, `requestBody`, `responseBody` flags as needed
 
 **Known limitation:** `PrettyDioLogger` prints `FormData` fields by collapsing them into a `Map`, which silently drops repeated keys (e.g. multiple `deleted_image_ids[]` entries — only the last value survives in the log, even though all values are still sent correctly on the wire). Work around this with a custom `InterceptorsWrapper.onRequest` placed before `PrettyDioLogger` that prints `FormData.fields`/`.files` directly (a `List<MapEntry>`, so duplicates are preserved), and set `requestBody: false` on `PrettyDioLogger` to avoid double-printing the body.
+
+---
+
+## 15. Firebase Core (firebase_core + FlutterFire CLI)
+
+**pubspec.yaml:**
+
+    firebase_core: ^4.11.0
+
+**One-time machine setup:**
+- Install FlutterFire CLI: `dart pub global activate flutterfire_cli`
+- **PATH gotcha (Windows):** this installs `flutterfire.bat` into `%LOCALAPPDATA%\Pub\Cache\bin`, which is *not* on PATH by default and won't be added automatically. If `flutterfire` isn't recognized after activating, add `%LOCALAPPDATA%\Pub\Cache\bin` to your User `Path` env var (Windows Settings → Environment Variables), then close/reopen the terminal
+- `firebase login` (uses the base Firebase CLI, separate install from `npm install -g firebase-tools`)
+
+**Steps:**
+- Create the project in the [Firebase Console](https://console.firebase.google.com/)
+- Run `flutterfire configure --project=<project-id>` from the repo root — generates `lib/firebase_options.dart` and drops `android/app/google-services.json` + `ios/Runner/GoogleService-Info.plist`
+- Only select the platforms you actually ship (`android`,`ios`) — selecting `web`/`macos`/`windows` too can fail with a `FirebaseCommandException` trying to auto-register a web app, and pulls in config you don't need
+- **Interactive prompts are unreliable in some Windows terminals** (arrow-key/checkbox input can render as garbled repeated text and silently fail to toggle selections). If that happens, bypass the interactive UI entirely with flags:
+
+      flutterfire configure --project=<project-id> --platforms=android,ios --android-package-name=<applicationId> --ios-bundle-id=<bundleId> --yes
+
+- Confirm the Gradle plugin got wired: `com.google.gms.google-services` should appear in both `android/settings.gradle.kts` (`plugins {}`, with version) and `android/app/build.gradle.kts` (`plugins {}`, no version)
+- In `main.dart`, before `runApp()` (and before `initDependencies()`):
+
+      import 'package:firebase_core/firebase_core.dart';
+      import 'firebase_options.dart';
+      ...
+      await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+**Multi-environment caveat:** if your Android `applicationId` varies per environment via `--dart-define` (as in section 11) rather than real Gradle product flavors, `google-services.json` can only match **one** of those package names at a time — Firebase validates package name at runtime and will flag a mismatch for the other environments. Proper per-environment isolation needs actual Gradle flavors (matching `applicationId` per flavor + `google-services.json` placed under `android/app/src/<flavor>/`), which is a separate, bigger change — not required just to get Firebase working for one environment.
+
+**iOS bundle ID note:** unlike Android's dart-define-driven `applicationId`, the iOS bundle ID is a single static value in `ios/Runner.xcodeproj/project.pbxproj` — there's no per-environment iOS equivalent unless you add Xcode build configurations/schemes per environment (out of scope unless you specifically need it).
+
+**`GoogleService-Info.plist` is optional for Core alone:** `firebase_options.dart` embeds full iOS `FirebaseOptions` (apiKey, appId, iosBundleId, etc.), which is what `Firebase.initializeApp(options: ...)` actually reads — the native plist file isn't required just for `firebase_core` to work. It becomes relevant if you add a product whose native iOS SDK reads config directly outside Dart (e.g. some Crashlytics build-phase scripts).

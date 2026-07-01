@@ -64,9 +64,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         'social_media_flag': socialMediaFlag,
         if (token != null && token.isNotEmpty) 'token': token,
         if (profilePicture != null)
-          'profile_picture': await MultipartFile.fromFile(
-            profilePicture.path,
-          ),
+          'profile_picture': await MultipartFile.fromFile(profilePicture.path),
       });
       final response = await dioClient.dio.post(
         ApiEndpoints.signup,
