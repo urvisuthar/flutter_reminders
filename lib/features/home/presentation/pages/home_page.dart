@@ -112,6 +112,14 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               ListTile(
+                leading: const Icon(Icons.notifications_outlined),
+                title: const Text("Reminders"),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  context.push(RouteNames.reminders);
+                },
+              ),
+              ListTile(
                 leading: const Icon(Icons.brightness_6),
                 title: const Text("Toggle Theme"),
                 onTap: () {

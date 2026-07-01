@@ -64,7 +64,9 @@ class _AppTextFieldState extends State<AppTextField> {
       if (picked != null) {
         final dt = DateTime(0, 0, 0, picked.hour, picked.minute);
         widget.controller.text = DateTimeUtils.toDisplayTime(dt);
-        widget.onChanged?.call(DateTimeUtils.toApiTime(picked.hour, picked.minute));
+        widget.onChanged?.call(
+          DateTimeUtils.toApiTime(picked.hour, picked.minute),
+        );
       }
     }
   }
@@ -86,20 +88,18 @@ class _AppTextFieldState extends State<AppTextField> {
           : (widget.maxLines ?? (widget.minLines != null ? null : 1)),
       readOnly: isPicker,
       onTap: isPicker ? _onTap : null,
-      style: Theme.of(context)
-          .textTheme
-          .bodyLarge
-          ?.copyWith(fontWeight: FontWeight.w500),
+      style: Theme.of(
+        context,
+      ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
       decoration: InputDecoration(
         hintText: widget.hint,
         prefixIcon: widget.prefixIcon != null
             ? Icon(
                 widget.prefixIcon,
                 size: 20,
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withValues(alpha: 0.6),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.6),
               )
             : null,
         suffixIcon: widget.isPassword
@@ -114,17 +114,16 @@ class _AppTextFieldState extends State<AppTextField> {
                 onPressed: widget.onToggleObscure,
               )
             : isPicker
-                ? Icon(
-                    widget.isDatePicker
-                        ? Icons.calendar_today_outlined
-                        : Icons.access_time,
-                    size: 20,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.6),
-                  )
-                : null,
+            ? Icon(
+                widget.isDatePicker
+                    ? Icons.calendar_today_outlined
+                    : Icons.access_time,
+                size: 20,
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.6),
+              )
+            : null,
       ),
     );
 
@@ -138,11 +137,10 @@ class _AppTextFieldState extends State<AppTextField> {
             child: Text(
               widget.label!.toUpperCase(),
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.5),
-                  ),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
             ),
           ),
           textField,

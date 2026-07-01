@@ -23,4 +23,10 @@ class DateTimeUtils {
     final mm = minute.toString().padLeft(2, '0');
     return '$hh:$mm:00';
   }
+
+  static String apiDateToDisplay(String apiDate) =>
+      toDisplayDate(DateFormat(_apiDateFormat).parse(apiDate));
+
+  static String apiTimeToDisplay(String apiTime) =>
+      toDisplayTime(DateFormat(_apiTimeFormat).parse(apiTime));
 }

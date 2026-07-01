@@ -6,6 +6,10 @@ import 'package:flutter_reminders/features/auth/domain/repositories/auth_reposit
 import 'package:flutter_reminders/features/auth/domain/usecases/checkauthstatus_logout_usecase.dart';
 import 'package:flutter_reminders/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_reminders/features/reminder/domain/usecases/add_reminder_usecase.dart';
+import 'package:flutter_reminders/features/reminder/domain/usecases/delete_reminder_usecase.dart';
+import 'package:flutter_reminders/features/reminder/domain/usecases/get_reminder_by_id_usecase.dart';
+import 'package:flutter_reminders/features/reminder/domain/usecases/get_reminders_usecase.dart';
+import 'package:flutter_reminders/features/reminder/domain/usecases/update_reminder_usecase.dart';
 import 'package:flutter_reminders/features/reminder/presentation/bloc/reminder_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -100,7 +104,23 @@ void _initReminder() {
     () => ReminderRepositoryImpl(serviceLocator()),
   );
   serviceLocator.registerFactory(() => AddReminderUsecase(serviceLocator()));
+  serviceLocator.registerFactory(() => GetRemindersUsecase(serviceLocator()));
   serviceLocator.registerFactory(
-    () => ReminderBloc(addReminderUsecase: serviceLocator()),
+    () => GetReminderByIdUsecase(serviceLocator()),
+  );
+  serviceLocator.registerFactory(
+    () => UpdateReminderUsecase(serviceLocator()),
+  );
+  serviceLocator.registerFactory(
+    () => DeleteReminderUsecase(serviceLocator()),
+  );
+  serviceLocator.registerFactory(
+    () => ReminderBloc(
+      addReminderUsecase: serviceLocator(),
+      getRemindersUsecase: serviceLocator(),
+      getReminderByIdUsecase: serviceLocator(),
+      updateReminderUsecase: serviceLocator(),
+      deleteReminderUsecase: serviceLocator(),
+    ),
   );
 }

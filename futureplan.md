@@ -305,3 +305,9 @@ Want to add any of these into the roadmap?
 EXTRA:
 Sharing of reminders via system share sheet is a great idea! You can add a "Share" button on the Reminder Detail Page that allows users to share the reminder's title, description, and date/time through other apps (like messaging apps, email, etc.). This can be implemented using the `share_plus` package in Flutter.
 Deep and dynamic link for above
+Grid view and staggered view for reminders list (optional)
+how to implement api with mock api if api is not ready yet
+video or youtube tutorial links for each step (optional)
+calendare view things 
+graphs for date vs reminders count (optional)
+cancel api call if user navigates away from the page (optional)
