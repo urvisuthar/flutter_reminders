@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/settings/settings_cubit.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/domain/usecases/login_usecase.dart';
+import 'features/auth/domain/usecases/signup_usecase.dart';
 import 'features/profile/data/datasource/profile_remote_data_source.dart';
 import 'features/profile/data/repositories/profile_repository_impl.dart';
 import 'features/profile/domain/repositories/profile_repository.dart';
@@ -70,6 +71,7 @@ void _initAuth() {
     ),
   );
   serviceLocator.registerFactory(() => LoginUsecase(serviceLocator()));
+  serviceLocator.registerFactory(() => SignupUsecase(serviceLocator()));
   serviceLocator.registerFactory(
     () => CheckAuthStatusUseCase(serviceLocator()),
   );
@@ -79,6 +81,7 @@ void _initAuth() {
   serviceLocator.registerLazySingleton(
     () => AuthBloc(
       loginUsecase: serviceLocator(),
+      signupUsecase: serviceLocator(),
       checkAuthStatusUseCase: serviceLocator(),
       logoutUseCase: serviceLocator(),
     ),
